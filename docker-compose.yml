@@ -1,0 +1,23 @@
+version: '3.8'
+
+x-service-basic: &service-basic
+  environment:
+    POSTGRES_DB: db
+    POSTGRES_USER: user
+    POSTGRES_PASSWORD: password
+    POSTGRES_URL: "postgres://user:password@db/db?sslmode=disable"
+
+services:
+  service:
+    build:
+        context: ./
+        dockerfile: ./build/docker/Dockerfile
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+    <<: *service-basic
+
+  db:
+    image: postgres:13.2-alpine
+    <<: *service-basic
